@@ -1,0 +1,149 @@
+/* ===========================
+   Application Form Styles
+   =========================== */
+
+.apply-page {
+    min-height: 100vh;
+    padding-top: 80px;
+    background: var(--gradient-hero);
+}
+
+.apply-container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: var(--space-8) var(--space-4);
+}
+
+.apply-header {
+    text-align: center;
+    margin-bottom: var(--space-8);
+}
+
+.apply-header h1 {
+    font-size: var(--font-3xl);
+    margin-bottom: var(--space-2);
+}
+
+.apply-header p {
+    color: var(--gray-500);
+}
+
+.apply-card {
+    padding: var(--space-8);
+}
+
+.form-step {
+    display: none;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.form-step.active {
+    display: block;
+}
+
+.form-step-title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: var(--font-xl);
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--gray-100);
+}
+
+.form-step-title .step-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--purple-100);
+    color: var(--purple-600);
+    border-radius: var(--radius-lg);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-5);
+}
+
+.form-row.three {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--space-8);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--gray-100);
+}
+
+.upload-area {
+    border: 2px dashed var(--gray-200);
+    border-radius: var(--radius-xl);
+    padding: var(--space-6);
+    text-align: center;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    background: var(--gray-50);
+}
+
+.upload-area:hover {
+    border-color: var(--purple-300);
+    background: var(--purple-50);
+}
+
+.upload-area.uploaded {
+    border-color: var(--success);
+    border-style: solid;
+    background: var(--success-light);
+}
+
+.upload-icon {
+    color: var(--gray-400);
+    margin-bottom: var(--space-2);
+}
+
+.upload-area.uploaded .upload-icon {
+    color: var(--success);
+}
+
+.upload-text {
+    font-size: var(--font-sm);
+    color: var(--gray-500);
+}
+
+.upload-area.uploaded .upload-text {
+    color: #059669;
+    font-weight: 600;
+}
+
+.input-with-tag {
+    position: relative;
+}
+
+.input-with-tag .confidence-tag {
+    position: absolute;
+    top: 50%;
+    right: var(--space-3);
+    transform: translateY(-50%);
+}
+
+@media (max-width: 640px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .form-row.three {
+        grid-template-columns: 1fr;
+    }
+
+    .apply-card {
+        padding: var(--space-5);
+    }
+}

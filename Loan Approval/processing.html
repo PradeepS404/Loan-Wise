@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analyzing Application | LoanWise AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/design-system.css">
+    <link rel="stylesheet" href="css/processing.css">
+</head>
+<body>
+    <div class="processing-page">
+        <div class="hero-orb hero-orb-1" style="opacity:0.2"></div>
+        <div class="hero-orb hero-orb-2" style="opacity:0.15"></div>
+
+        <div class="processing-container">
+            <div class="processing-animation">
+                <div class="processing-ring">
+                    <svg viewBox="0 0 140 140">
+                        <defs>
+                            <linearGradient id="processingGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#9333ea"/>
+                                <stop offset="50%" stop-color="#7c3aed"/>
+                                <stop offset="100%" stop-color="#06b6d4"/>
+                            </linearGradient>
+                        </defs>
+                        <circle cx="70" cy="70" r="60" class="ring-bg"/>
+                        <circle cx="70" cy="70" r="60" class="ring-progress"/>
+                    </svg>
+                    <div class="processing-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a4 4 0 0 0-4 4c0 2 2 3 2 6H8a2 2 0 0 0 0 4h8a2 2 0 0 0 0-4h-2c0-3 2-4 2-6a4 4 0 0 0-4-4z"/><line x1="10" y1="20" x2="14" y2="20"/></svg>
+                    </div>
+                </div>
+            </div>
+
+            <h1 class="processing-title">Analyzing Your Application</h1>
+            <p class="processing-subtitle">Our AI engine is evaluating your profile. This won't take long.</p>
+
+            <div class="processing-steps">
+                <div class="processing-step active" id="pStep1">
+                    <div class="processing-step-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+                    </div>
+                    <span class="processing-step-text">Verifying submitted data...</span>
+                    <div class="mini-spinner"></div>
+                </div>
+                <div class="processing-step" id="pStep2">
+                    <div class="processing-step-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    </div>
+                    <span class="processing-step-text">Calculating risk score...</span>
+                </div>
+                <div class="processing-step" id="pStep3">
+                    <div class="processing-step-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    </div>
+                    <span class="processing-step-text">Generating decision & report...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script>
+        // Ensure there's a current application
+        const appId = sessionStorage.getItem('lw_current_app');
+        if (!appId) {
+            window.location.href = 'dashboard.html';
+        }
+
+        // Animate processing steps
+        const steps = [
+            { el: 'pStep1', delay: 0 },
+            { el: 'pStep2', delay: 1500 },
+            { el: 'pStep3', delay: 3000 }
+        ];
+
+        steps.forEach((step, i) => {
+            setTimeout(() => {
+                // Complete previous
+                if (i > 0) {
+                    const prev = document.getElementById(steps[i-1].el);
+                    prev.classList.remove('active');
+                    prev.classList.add('completed');
+                    const spinner = prev.querySelector('.mini-spinner');
+                    if (spinner) spinner.remove();
+                    // Add check mark
+                    const icon = prev.querySelector('.processing-step-icon');
+                    icon.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>';
+                }
+
+                // Activate current
+                const current = document.getElementById(step.el);
+                current.classList.add('active');
+                if (!current.querySelector('.mini-spinner')) {
+                    const spinner = document.createElement('div');
+                    spinner.className = 'mini-spinner';
+                    current.appendChild(spinner);
+                }
+            }, step.delay);
+        });
+
+        // Complete last step and redirect
+        setTimeout(() => {
+            const last = document.getElementById('pStep3');
+            last.classList.remove('active');
+            last.classList.add('completed');
+            const spinner = last.querySelector('.mini-spinner');
+            if (spinner) spinner.remove();
+        }, 4500);
+
+        setTimeout(() => {
+            window.location.href = 'decision.html?id=' + appId;
+        }, 5000);
+    </script>
+</body>
+</html>

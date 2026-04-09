@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoanWise AI — Smart Loan Approval in Minutes</title>
+    <meta name="description" content="Get instant loan approvals powered by AI. Smart risk assessment, transparent decisions, and fast processing.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/design-system.css">
+    <link rel="stylesheet" href="css/landing.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="container navbar-inner">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5"/>
+                        <path d="M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                <span class="logo-text">Loan<span class="logo-highlight">Wise</span></span>
+            </a>
+            <div class="nav-links" id="navLinks">
+                <a href="#features">Features</a>
+                <a href="#how-it-works">How It Works</a>
+                <a href="emi-calculator.html">EMI Calculator</a>
+                <a href="auth.html" class="btn btn-ghost btn-sm">Login</a>
+                <a href="auth.html#signup" class="btn btn-primary btn-sm">Get Started</a>
+            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-bg">
+            <div class="hero-orb hero-orb-1"></div>
+            <div class="hero-orb hero-orb-2"></div>
+            <div class="hero-orb hero-orb-3"></div>
+        </div>
+        <div class="container hero-content">
+            <div class="hero-badge animate-fade-in">
+                <span class="badge badge-purple">✨ AI-Powered</span>
+                <span>Trusted by 50,000+ borrowers</span>
+            </div>
+            <h1 class="hero-title animate-fade-in-up">
+                Get Loan Approval<br>
+                <span class="gradient-text">in Minutes</span>
+            </h1>
+            <p class="hero-subtitle animate-fade-in-up delay-1">
+                Our intelligent underwriting engine analyzes your profile in real-time,<br>
+                delivering transparent decisions with clear explanations.
+            </p>
+            <div class="hero-actions animate-fade-in-up delay-2">
+                <a href="auth.html#signup" class="btn btn-primary btn-lg" id="ctaApplyNow">
+                    Apply Now
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </a>
+                <a href="#how-it-works" class="btn btn-glass btn-lg">
+                    See How It Works
+                </a>
+            </div>
+            <div class="hero-stats animate-fade-in-up delay-3">
+                <div class="hero-stat">
+                    <span class="hero-stat-value">98%</span>
+                    <span class="hero-stat-label">Accuracy Rate</span>
+                </div>
+                <div class="hero-stat-divider"></div>
+                <div class="hero-stat">
+                    <span class="hero-stat-value">&lt;3 min</span>
+                    <span class="hero-stat-label">Decision Time</span>
+                </div>
+                <div class="hero-stat-divider"></div>
+                <div class="hero-stat">
+                    <span class="hero-stat-value">50K+</span>
+                    <span class="hero-stat-label">Loans Processed</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-visual animate-fade-in-up delay-2">
+            <div class="hero-card glass-card">
+                <div class="hero-card-header">
+                    <div class="hero-card-dot green"></div>
+                    <span>Application Status</span>
+                </div>
+                <div class="hero-card-status">
+                    <span class="status-badge status-approved">Approved</span>
+                </div>
+                <div class="hero-card-score">
+                    <div class="mini-gauge">
+                        <svg viewBox="0 0 120 120" class="gauge-svg">
+                            <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(139,92,246,0.15)" stroke-width="10"/>
+                            <circle cx="60" cy="60" r="50" fill="none" stroke="url(#gaugeGradient)" stroke-width="10" stroke-dasharray="251.2" stroke-dashoffset="50" stroke-linecap="round" transform="rotate(-90 60 60)"/>
+                            <defs>
+                                <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#8b5cf6"/>
+                                    <stop offset="100%" stop-color="#06b6d4"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <span class="gauge-value">82</span>
+                    </div>
+                    <div class="hero-card-score-info">
+                        <span class="score-label">Risk Score</span>
+                        <span class="score-desc">Low Risk Profile</span>
+                    </div>
+                </div>
+                <div class="hero-card-metrics">
+                    <div class="mini-metric">
+                        <span class="mini-metric-label">DTI</span>
+                        <span class="mini-metric-value">28%</span>
+                    </div>
+                    <div class="mini-metric">
+                        <span class="mini-metric-label">Income</span>
+                        <span class="mini-metric-value">₹85K</span>
+                    </div>
+                    <div class="mini-metric">
+                        <span class="mini-metric-label">EMI</span>
+                        <span class="mini-metric-value">₹24K</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features section" id="features">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <span class="badge badge-purple-light">Features</span>
+                <h2 class="section-title">Why Choose <span class="gradient-text">LoanWise?</span></h2>
+                <p class="section-subtitle">Our AI-powered platform delivers fast, fair, and transparent loan decisions.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card glass-card animate-on-scroll" id="feature-ai">
+                    <div class="feature-icon purple">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 0-4 4c0 2 2 3 2 6H8a2 2 0 0 0 0 4h8a2 2 0 0 0 0-4h-2c0-3 2-4 2-6a4 4 0 0 0-4-4z"/><line x1="10" y1="20" x2="14" y2="20"/></svg>
+                    </div>
+                    <h3>AI Risk Assessment</h3>
+                    <p>Advanced algorithms analyze 10+ data points to calculate accurate risk scores in real-time.</p>
+                </div>
+                <div class="feature-card glass-card animate-on-scroll" id="feature-speed">
+                    <div class="feature-icon blue">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    </div>
+                    <h3>Instant Decisions</h3>
+                    <p>Get your loan decision in under 3 minutes. No waiting days for manual reviews.</p>
+                </div>
+                <div class="feature-card glass-card animate-on-scroll" id="feature-transparent">
+                    <div class="feature-icon green">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </div>
+                    <h3>Full Transparency</h3>
+                    <p>Every decision comes with clear, bullet-point explanations. No black boxes.</p>
+                </div>
+                <div class="feature-card glass-card animate-on-scroll" id="feature-secure">
+                    <div class="feature-icon orange">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    </div>
+                    <h3>Secure & Compliant</h3>
+                    <p>Bank-grade encryption. No bias in decisions — we never use gender, religion, or race.</p>
+                </div>
+                <div class="feature-card glass-card animate-on-scroll" id="feature-emi">
+                    <div class="feature-icon pink">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    </div>
+                    <h3>EMI Calculator</h3>
+                    <p>Plan your finances with our built-in EMI calculator and what-if simulator.</p>
+                </div>
+                <div class="feature-card glass-card animate-on-scroll" id="feature-track">
+                    <div class="feature-icon cyan">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    </div>
+                    <h3>Track Applications</h3>
+                    <p>Monitor all your applications in one dashboard. Reapply anytime with improved terms.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works section" id="how-it-works">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <span class="badge badge-purple-light">Process</span>
+                <h2 class="section-title">How It <span class="gradient-text">Works</span></h2>
+                <p class="section-subtitle">Three simple steps to get your loan approved.</p>
+            </div>
+            <div class="steps-container">
+                <div class="step-card animate-on-scroll" id="step-1">
+                    <div class="step-number">01</div>
+                    <div class="step-content">
+                        <h3>Apply Online</h3>
+                        <p>Fill out our simple multi-step form with your personal, employment, and financial details.</p>
+                    </div>
+                    <div class="step-visual">
+                        <div class="step-icon-wrap purple">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="step-connector animate-on-scroll">
+                    <div class="connector-line"></div>
+                </div>
+                <div class="step-card animate-on-scroll" id="step-2">
+                    <div class="step-number">02</div>
+                    <div class="step-content">
+                        <h3>AI Analyzes</h3>
+                        <p>Our engine evaluates your risk profile using credit score, DTI ratio, income stability, and more.</p>
+                    </div>
+                    <div class="step-visual">
+                        <div class="step-icon-wrap blue">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="step-connector animate-on-scroll">
+                    <div class="connector-line"></div>
+                </div>
+                <div class="step-card animate-on-scroll" id="step-3">
+                    <div class="step-number">03</div>
+                    <div class="step-content">
+                        <h3>Get Decision</h3>
+                        <p>Receive your decision instantly with a detailed risk score, explanations, and next steps.</p>
+                    </div>
+                    <div class="step-visual">
+                        <div class="step-icon-wrap green">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust Section -->
+    <section class="trust section" id="trust">
+        <div class="container">
+            <div class="trust-grid">
+                <div class="trust-card glass-card animate-on-scroll">
+                    <div class="trust-icon">🔒</div>
+                    <h4>256-bit Encryption</h4>
+                    <p>Bank-level security for all data</p>
+                </div>
+                <div class="trust-card glass-card animate-on-scroll">
+                    <div class="trust-icon">⚖️</div>
+                    <h4>Fair Lending</h4>
+                    <p>No bias in our decision process</p>
+                </div>
+                <div class="trust-card glass-card animate-on-scroll">
+                    <div class="trust-icon">📋</div>
+                    <h4>Full Audit Trail</h4>
+                    <p>Every decision is logged & traceable</p>
+                </div>
+                <div class="trust-card glass-card animate-on-scroll">
+                    <div class="trust-icon">🏦</div>
+                    <h4>RBI Compliant</h4>
+                    <p>Adheres to all regulatory guidelines</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section section">
+        <div class="container">
+            <div class="cta-card glass-card animate-on-scroll">
+                <h2>Ready to Get Started?</h2>
+                <p>Join thousands of borrowers who trust LoanWise for fast, fair loan decisions.</p>
+                <a href="auth.html#signup" class="btn btn-primary btn-lg">
+                    Apply for a Loan
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-inner">
+            <div class="footer-brand">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                    </div>
+                    <span class="logo-text">Loan<span class="logo-highlight">Wise</span></span>
+                </a>
+                <p>AI-powered loan underwriting for the modern world.</p>
+            </div>
+            <div class="footer-links">
+                <div class="footer-col">
+                    <h4>Product</h4>
+                    <a href="#features">Features</a>
+                    <a href="emi-calculator.html">EMI Calculator</a>
+                    <a href="what-if.html">What-If Simulator</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <a href="#">About Us</a>
+                    <a href="#">Careers</a>
+                    <a href="#">Contact</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Fair Lending</a>
+                </div>
+            </div>
+        </div>
+        <div class="container footer-bottom">
+            <p>&copy; 2026 LoanWise AI. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/utils.js"></script>
+    <script src="js/landing.js"></script>
+</body>
+</html>

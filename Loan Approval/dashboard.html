@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | LoanWise AI</title>
+    <meta name="description" content="View your loan applications, track status, and manage your account.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/design-system.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="container navbar-inner">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                </div>
+                <span class="logo-text">Loan<span class="logo-highlight">Wise</span></span>
+            </a>
+            <div class="nav-links" id="navLinks">
+                <a href="apply.html">Apply for Loan</a>
+                <a href="emi-calculator.html">EMI Calculator</a>
+                <a href="what-if.html">What-If</a>
+                <button class="btn btn-ghost btn-sm" onclick="Auth.logout()">Logout</button>
+            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <div class="dashboard-page">
+        <div class="dashboard-container">
+            <div class="dashboard-header">
+                <div>
+                    <h1>Dashboard</h1>
+                    <p class="dashboard-welcome" id="welcomeMsg">Welcome back!</p>
+                </div>
+                <a href="apply.html" class="btn btn-primary btn-md" id="applyBtn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    Apply for New Loan
+                </a>
+            </div>
+
+            <!-- Stats -->
+            <div class="dashboard-stats" id="dashStats">
+                <!-- Injected by JS -->
+            </div>
+
+            <!-- Applications -->
+            <div class="applications-section">
+                <div class="section-top">
+                    <h2>Your Applications</h2>
+                </div>
+                <div id="applicationsList">
+                    <!-- Injected by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script>
+        const user = Auth.requireAuth();
+        if (!user) throw new Error('Not authenticated');
+
+        initNavbar();
+
+        document.getElementById('welcomeMsg').textContent = `Welcome back, ${user.name}!`;
+
+        // Load applications
+        const allApps = DB.getApplications();
+        const myApps = allApps.filter(a => a.userId === user.id);
+
+        // Stats
+        const approved = myApps.filter(a => a.decision === 'approved').length;
+        const conditions = myApps.filter(a => a.decision === 'conditions').length;
+        const review = myApps.filter(a => a.decision === 'review').length;
+        const rejected = myApps.filter(a => a.decision === 'rejected').length;
+
+        document.getElementById('dashStats').innerHTML = `
+            <div class="stat-card glass-card">
+                <div class="stat-icon" style="background: var(--purple-100); color: var(--purple-600);">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                </div>
+                <div class="stat-value">${myApps.length}</div>
+                <div class="stat-label">Total Applications</div>
+            </div>
+            <div class="stat-card glass-card">
+                <div class="stat-icon" style="background: var(--success-light); color: var(--success);">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                </div>
+                <div class="stat-value">${approved}</div>
+                <div class="stat-label">Approved</div>
+            </div>
+            <div class="stat-card glass-card">
+                <div class="stat-icon" style="background: var(--warning-light); color: var(--warning);">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                </div>
+                <div class="stat-value">${conditions + review}</div>
+                <div class="stat-label">Pending / Conditions</div>
+            </div>
+            <div class="stat-card glass-card">
+                <div class="stat-icon" style="background: var(--danger-light); color: var(--danger);">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                </div>
+                <div class="stat-value">${rejected}</div>
+                <div class="stat-label">Rejected</div>
+            </div>
+        `;
+
+        // Applications List
+        const listEl = document.getElementById('applicationsList');
+
+        if (myApps.length === 0) {
+            listEl.innerHTML = `
+                <div class="empty-state glass-card">
+                    <div class="empty-state-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    </div>
+                    <h3>No Applications Yet</h3>
+                    <p>Start your journey by applying for a loan.</p>
+                    <a href="apply.html" class="btn btn-primary btn-md">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        Apply Now
+                    </a>
+                </div>
+            `;
+        } else {
+            const statusLabels = {
+                approved: 'Approved',
+                conditions: 'Conditions',
+                review: 'Under Review',
+                rejected: 'Rejected'
+            };
+
+            const statusIcons = {
+                approved: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+                conditions: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+                review: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+                rejected: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>'
+            };
+
+            const purposeLabels = {
+                home: 'Home Purchase', car: 'Vehicle Loan', education: 'Education',
+                business: 'Business', medical: 'Medical', personal: 'Personal',
+                'debt-consolidation': 'Debt Consolidation', other: 'Other'
+            };
+
+            // Sort most recent first
+            const sorted = [...myApps].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+            listEl.innerHTML = sorted.map(app => `
+                <div class="app-card glass-card" onclick="window.location.href='decision.html?id=${app.id}'">
+                    <div class="app-card-icon ${app.decision}">
+                        ${statusIcons[app.decision] || ''}
+                    </div>
+                    <div class="app-card-info">
+                        <h4>${purposeLabels[app.loanPurpose] || 'Loan'} Application</h4>
+                        <p>ID: ${app.id} • Score: ${app.riskResult?.score || 'N/A'}/100</p>
+                    </div>
+                    <div class="app-card-meta">
+                        <div class="amount">${formatCurrency(app.loanAmount)}</div>
+                        <div class="date">${formatDate(app.createdAt)}</div>
+                    </div>
+                    <div class="app-card-arrow">
+                        <span class="status-badge status-${app.decision}" style="font-size: 11px; padding: 4px 10px;">
+                            ${statusLabels[app.decision]}
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+</html>

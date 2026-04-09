@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMI Calculator | LoanWise AI</title>
+    <meta name="description" content="Calculate your monthly EMI with our interactive loan calculator. Plan your finances before applying.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/design-system.css">
+    <link rel="stylesheet" href="css/tools.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="container navbar-inner">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                </div>
+                <span class="logo-text">Loan<span class="logo-highlight">Wise</span></span>
+            </a>
+            <div class="nav-links" id="navLinks">
+                <a href="index.html">Home</a>
+                <a href="what-if.html">What-If Simulator</a>
+                <a href="auth.html" class="btn btn-ghost btn-sm">Login</a>
+                <a href="auth.html#signup" class="btn btn-primary btn-sm">Get Started</a>
+            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <div class="tools-page">
+        <div class="tools-container">
+            <div class="tools-header">
+                <span class="badge badge-purple-light">Financial Tool</span>
+                <h1>EMI Calculator</h1>
+                <p>Plan your loan repayment with our interactive calculator</p>
+            </div>
+
+            <div class="calculator-grid">
+                <!-- Input Side -->
+                <div class="calculator-inputs glass-card">
+                    <div class="slider-group">
+                        <div class="slider-header">
+                            <span class="slider-label">Loan Amount</span>
+                            <span class="slider-value" id="amountValue">₹5,00,000</span>
+                        </div>
+                        <input type="range" class="slider-input" id="loanAmountSlider" 
+                            min="50000" max="10000000" step="50000" value="500000"
+                            oninput="updateCalculator()">
+                        <div class="slider-range">
+                            <span>₹50K</span>
+                            <span>₹1Cr</span>
+                        </div>
+                    </div>
+
+                    <div class="slider-group">
+                        <div class="slider-header">
+                            <span class="slider-label">Interest Rate (% p.a.)</span>
+                            <span class="slider-value" id="rateValue">10.5%</span>
+                        </div>
+                        <input type="range" class="slider-input" id="rateSlider" 
+                            min="5" max="24" step="0.25" value="10.5"
+                            oninput="updateCalculator()">
+                        <div class="slider-range">
+                            <span>5%</span>
+                            <span>24%</span>
+                        </div>
+                    </div>
+
+                    <div class="slider-group">
+                        <div class="slider-header">
+                            <span class="slider-label">Loan Tenure</span>
+                            <span class="slider-value" id="tenureValue">36 months</span>
+                        </div>
+                        <input type="range" class="slider-input" id="tenureSlider" 
+                            min="6" max="360" step="6" value="36"
+                            oninput="updateCalculator()">
+                        <div class="slider-range">
+                            <span>6 mo</span>
+                            <span>30 yrs</span>
+                        </div>
+                    </div>
+
+                    <div class="slider-group" style="margin-bottom: 0;">
+                        <div class="slider-header">
+                            <span class="slider-label">Monthly Income (optional)</span>
+                            <span class="slider-value" id="incomeValue">₹75,000</span>
+                        </div>
+                        <input type="range" class="slider-input" id="incomeSlider" 
+                            min="10000" max="1000000" step="5000" value="75000"
+                            oninput="updateCalculator()">
+                        <div class="slider-range">
+                            <span>₹10K</span>
+                            <span>₹10L</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Side -->
+                <div class="calculator-results glass-card" id="calcResults">
+                    <h3>Your Monthly EMI</h3>
+
+                    <div class="emi-result">
+                        <div class="emi-amount" id="emiAmount">₹16,253</div>
+                        <div class="emi-label">per month</div>
+                    </div>
+
+                    <div class="result-details">
+                        <div class="result-row">
+                            <span class="label">Principal Amount</span>
+                            <span class="value" id="principalDisplay">₹5,00,000</span>
+                        </div>
+                        <div class="result-row">
+                            <span class="label">Total Interest</span>
+                            <span class="value" id="interestDisplay">₹85,108</span>
+                        </div>
+                        <div class="result-row" style="padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.2);">
+                            <span class="label" style="font-weight: 700;">Total Payment</span>
+                            <span class="value" id="totalDisplay">₹5,85,108</span>
+                        </div>
+                    </div>
+
+                    <div class="affordability" id="affordabilitySection">
+                        <div class="affordability-header">
+                            <span>Affordability</span>
+                            <span id="affordabilityLabel">Good</span>
+                        </div>
+                        <div class="affordability-bar">
+                            <div class="affordability-fill good" id="affordabilityFill" style="width: 22%;"></div>
+                        </div>
+                        <p style="font-size: 11px; margin-top: 8px; opacity: 0.7;" id="affordabilityNote">EMI is 22% of your income</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Apply CTA -->
+            <div style="text-align: center; margin-top: 48px;">
+                <p style="color: var(--gray-500); margin-bottom: 16px;">Ready to apply with these numbers?</p>
+                <a href="auth.html#signup" class="btn btn-primary btn-lg" id="quickApplyBtn">
+                    Apply for This Loan
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/riskEngine.js"></script>
+    <script>
+        initNavbar();
+
+        function updateCalculator() {
+            const amount = Number(document.getElementById('loanAmountSlider').value);
+            const rate = Number(document.getElementById('rateSlider').value);
+            const tenure = Number(document.getElementById('tenureSlider').value);
+            const income = Number(document.getElementById('incomeSlider').value);
+
+            // Update display values
+            document.getElementById('amountValue').textContent = formatCurrency(amount);
+            document.getElementById('rateValue').textContent = rate + '%';
+            document.getElementById('tenureValue').textContent = tenure >= 12 
+                ? Math.floor(tenure / 12) + ' yr' + (tenure % 12 ? ` ${tenure % 12} mo` : '')
+                : tenure + ' months';
+            document.getElementById('incomeValue').textContent = formatCurrency(income);
+
+            // Calculate EMI
+            const emi = RiskEngine.calculateEMI(amount, rate, tenure);
+            const totalPayment = emi * tenure;
+            const totalInterest = totalPayment - amount;
+
+            document.getElementById('emiAmount').textContent = formatCurrency(emi);
+            document.getElementById('principalDisplay').textContent = formatCurrency(amount);
+            document.getElementById('interestDisplay').textContent = formatCurrency(totalInterest);
+            document.getElementById('totalDisplay').textContent = formatCurrency(totalPayment);
+
+            // Affordability
+            const emiPercent = Math.round((emi / income) * 100);
+            const affordFill = document.getElementById('affordabilityFill');
+            const affordLabel = document.getElementById('affordabilityLabel');
+            const affordNote = document.getElementById('affordabilityNote');
+
+            affordFill.style.width = Math.min(emiPercent, 100) + '%';
+            affordNote.textContent = `EMI is ${emiPercent}% of your income`;
+
+            if (emiPercent <= 30) {
+                affordFill.className = 'affordability-fill good';
+                affordLabel.textContent = 'Comfortable';
+            } else if (emiPercent <= 50) {
+                affordFill.className = 'affordability-fill moderate';
+                affordLabel.textContent = 'Moderate';
+            } else {
+                affordFill.className = 'affordability-fill poor';
+                affordLabel.textContent = 'Stretched';
+            }
+        }
+
+        // Update nav for logged in users
+        const currentUser = DB.getCurrentUser();
+        if (currentUser) {
+            document.getElementById('quickApplyBtn').href = 'apply.html';
+            document.getElementById('quickApplyBtn').textContent = 'Apply for This Loan →';
+        }
+
+        // Initial calculation
+        updateCalculator();
+    </script>
+</body>
+</html>

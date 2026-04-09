@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Decision | LoanWise AI</title>
+    <meta name="description" content="View your loan decision with detailed risk assessment and explanations.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/design-system.css">
+    <link rel="stylesheet" href="css/decision.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="container navbar-inner">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                </div>
+                <span class="logo-text">Loan<span class="logo-highlight">Wise</span></span>
+            </a>
+            <div class="nav-links" id="navLinks">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="emi-calculator.html">EMI Calculator</a>
+                <button class="btn btn-ghost btn-sm" onclick="Auth.logout()">Logout</button>
+            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <div class="decision-page">
+        <div class="decision-container" id="decisionContent">
+            <!-- Content injected by JS -->
+            <div style="text-align:center; padding: 80px 0;">
+                <div class="spinner" style="margin: 0 auto;"></div>
+                <p style="margin-top: 16px; color: var(--gray-400);">Loading decision...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/riskEngine.js"></script>
+    <script>
+        const user = Auth.requireAuth();
+        if (!user) throw new Error('Not authenticated');
+        initNavbar();
+
+        // Get application
+        const params = new URLSearchParams(window.location.search);
+        const appId = params.get('id') || sessionStorage.getItem('lw_current_app');
+        const apps = DB.getApplications();
+        const app = apps.find(a => a.id === appId);
+
+        if (!app) {
+            document.getElementById('decisionContent').innerHTML = `
+                <div class="empty-state" style="padding-top: 80px;">
+                    <h3>Application Not Found</h3>
+                    <p>The application you're looking for doesn't exist.</p>
+                    <a href="dashboard.html" class="btn btn-primary btn-md">Go to Dashboard</a>
+                </div>
+            `;
+        } else {
+            renderDecision(app);
+        }
+
+        function renderDecision(app) {
+            const r = app.riskResult;
+            const d = app.decision;
+
+            const decisionLabels = {
+                approved: 'Approved',
+                conditions: 'Approved with Conditions',
+                review: 'Under Review',
+                rejected: 'Rejected'
+            };
+
+            const decisionSubtexts = {
+                approved: 'Congratulations! Your loan application has been approved.',
+                conditions: 'Your loan is approved with some adjusted terms.',
+                review: 'Your application needs additional manual review.',
+                rejected: 'Unfortunately, your application could not be approved at this time.'
+            };
+
+            const decisionIcons = {
+                approved: '<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+                conditions: '<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+                review: '<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+                rejected: '<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>'
+            };
+
+            // Gauge color
+            let gaugeColor;
+            if (r.score > 75) gaugeColor = '#10b981';
+            else if (r.score >= 50) gaugeColor = '#f59e0b';
+            else if (r.score >= 35) gaugeColor = '#3b82f6';
+            else gaugeColor = '#ef4444';
+
+            const riskLabels = {
+                approved: 'Low Risk',
+                conditions: 'Medium Risk',
+                review: 'Elevated Risk',
+                rejected: 'High Risk'
+            };
+
+            const dashOffset = 502.4 - (502.4 * r.score / 100);
+
+            let html = `
+                <!-- Status Card -->
+                <div class="decision-status-card glass-card ${d}" id="statusCard">
+                    <div class="decision-icon">${decisionIcons[d]}</div>
+                    <div class="status-badge status-${d}" style="font-size: 16px; padding: 8px 20px; margin-bottom: 12px;">
+                        ${decisionLabels[d]}
+                    </div>
+                    <h2 class="decision-title">${decisionSubtexts[d]}</h2>
+                    <span class="decision-app-id">Application ID: ${app.id}</span>
+                </div>
+
+                <!-- Risk Score -->
+                <div class="risk-score-section glass-card">
+                    <h3 style="margin-bottom: 24px;">Risk Assessment Score</h3>
+                    <div class="risk-gauge">
+                        <svg viewBox="0 0 180 180">
+                            <circle cx="90" cy="90" r="80" class="gauge-track"/>
+                            <circle cx="90" cy="90" r="80" class="gauge-fill" 
+                                stroke="${gaugeColor}" 
+                                style="stroke-dashoffset: ${dashOffset};"
+                                id="scoreGauge"/>
+                        </svg>
+                        <div class="gauge-center">
+                            <span class="gauge-score" id="scoreValue">0</span>
+                            <span class="gauge-label">Risk Score</span>
+                        </div>
+                    </div>
+                    <p class="risk-label" style="color: ${gaugeColor};">${riskLabels[d]}</p>
+                </div>
+
+                <!-- Key Metrics -->
+                <div class="metrics-grid">
+                    <div class="metric-card glass-card">
+                        <div class="metric-icon">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        </div>
+                        <div class="metric-value">${formatCurrency(r.metrics.monthlyIncome)}</div>
+                        <div class="metric-label">Monthly Income</div>
+                    </div>
+                    <div class="metric-card glass-card">
+                        <div class="metric-icon">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                        </div>
+                        <div class="metric-value">${formatCurrency(r.metrics.proposedEMI)}</div>
+                        <div class="metric-label">Proposed EMI</div>
+                    </div>
+                    <div class="metric-card glass-card">
+                        <div class="metric-icon" style="background: ${r.metrics.dti > 40 ? 'var(--danger-light)' : 'var(--purple-50)'}; color: ${r.metrics.dti > 40 ? 'var(--danger)' : 'var(--purple-600)'};">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                        </div>
+                        <div class="metric-value">${r.metrics.dti}%</div>
+                        <div class="metric-label">Debt-to-Income</div>
+                    </div>
+                </div>
+
+                <!-- Explanations -->
+                <div class="explanation-section glass-card">
+                    <h3>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                        Decision Explanation
+                    </h3>
+                    <ul class="explanation-list">
+                        ${r.explanations.map(exp => `
+                            <li class="explanation-item ${exp.type}">
+                                <span class="item-icon">
+                                    ${exp.type === 'positive' ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>'
+                                    : exp.type === 'negative' ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
+                                    : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="1"/></svg>'}
+                                </span>
+                                <span>${exp.text}</span>
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+            `;
+
+            // Conditions section
+            if (r.conditions && r.conditions.length > 0) {
+                html += `
+                    <div class="conditions-section glass-card">
+                        <h3>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                            Conditions Applied
+                        </h3>
+                        ${r.conditions.map(c => `
+                            <div class="condition-item">
+                                <span class="condition-icon">⚠️</span>
+                                <span>${c.text}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            // Insight
+            if (r.similarProfileInsight) {
+                html += `
+                    <div class="insight-section glass-card">
+                        <p>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a4 4 0 0 0-4 4c0 2 2 3 2 6H8a2 2 0 0 0 0 4h8a2 2 0 0 0 0-4h-2c0-3 2-4 2-6a4 4 0 0 0-4-4z"/><line x1="10" y1="20" x2="14" y2="20"/></svg>
+                            ${r.similarProfileInsight.text}
+                        </p>
+                    </div>
+                `;
+            }
+
+            // Actions
+            html += `
+                <div class="decision-actions">
+                    <a href="dashboard.html" class="btn btn-secondary btn-lg">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                        Go to Dashboard
+                    </a>
+                    <a href="apply.html" class="btn btn-primary btn-lg">
+                        Apply Again
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/></svg>
+                    </a>
+                    <a href="what-if.html?id=${app.id}" class="btn btn-glass btn-lg">
+                        What-If Simulator
+                    </a>
+                </div>
+            `;
+
+            document.getElementById('decisionContent').innerHTML = html;
+
+            // Animate score counter
+            setTimeout(() => {
+                animateScore(r.score);
+            }, 300);
+        }
+
+        function animateScore(target) {
+            const el = document.getElementById('scoreValue');
+            if (!el) return;
+            let current = 0;
+            const duration = 1500;
+            const step = target / (duration / 16);
+            const timer = setInterval(() => {
+                current += step;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                el.textContent = Math.round(current);
+            }, 16);
+        }
+    </script>
+</body>
+</html>
